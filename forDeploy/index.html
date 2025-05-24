@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card</title>
+    <style>
+        body {
+
+        }
+    </style>
+</head>
+<body style="background-color: #c23636;">
+    <form id="userform">
+        <input type="text" id="username" placeholder="enter github profile URL" required />
+        <button type="submit">Fetch Card</button>
+    </form>
+    
+    <button id="refreshbtn">Refresh</button>
+    <div id="cardcontainer"></div>
+</body>
+<script> //ASSIGNMENT- USING GPT
+    // const btn = document.getElementById("fetchbtn");
+
+    //my own idea - a custom card generator for any github username
+    const form = document.getElementById("userform");
+    const inputuser = document.getElementById("username");
+    const refbtn = document.getElementById("refreshbtn");
+    const cardcontainer = document.getElementById("cardcontainer");
+
+    //CODE IN THE VIDEO
+    // const requestUrl = 'https://api.github.com/users/hiteshchoudhary';
+    // const xhr = new XMLHttpRequest();
+    // xhr.open('GET', requestUrl);
+    // console.log(xhr.readyState);
+    // xhr.onreadystatechange = function() { //continuously tracking state change - this function
+    //     console.log(xhr.readyState);
+    //     if(xhr.readyState === 4) {
+    //         const data = JSON.parse(this.responseText); //convert string to JSON
+    //         console.log(typeof data); //type of data from the url was string now it is object
+    //         console.log(data.followers);
+    //     }
+    // } 
+    // xhr.send();
+
+
+    //take photo from the object
+    //from the photo url
+    //on clicking a button a card should be shown
+    //make a card that shows the photo and the follower count
+
+    //ASSIGN1
+    // btn.addEventListener('click', () => {
+    //     //make it print the card
+    //     const requestUrl = "https://api.github.com/users/hiteshchoudhary";
+    //     const xhr = new XMLHttpRequest();
+
+    //     xhr.open('GET', requestUrl);
+    //     xhr.onreadystatechange = () => {
+    //         if(xhr.readyState === 4) {
+    //             const data = JSON.parse(xhr.responseText);
+
+    //             const card = document.createElement("div");
+    //             card.classList.add("card");
+
+
+                // card.innerHTML = `
+                //     <img src="${data.avatar_url}" alt="Avatar"/>
+                //     <h2>${data.name}</h2>
+                //     <p>${data.followers}</p>
+                // `;
+
+    //             cardcontainer.innerHTML = ""; //clear prev card if any
+    //             cardcontainer.appendChild(card);
+    //         }
+    //     };
+    //     xhr.send();
+
+    //     refbtn.addEventListener('click', () => {
+    //         cardcontainer.innerHTML = "";
+    //     })
+
+    
+
+
+        //ASSIGNMENT 2 - I CAME UP WITH THIS ..HEHE;;))
+        //SO MAKE A REFRESH BUTTON SO THAT I DON'T HAVE TO refresh using ctrl+r but through a button so the card clears - done
+        //secondly - make it such that i can take an input for any github id url and fetch this card for that url
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); //preventpage reload when form is submitted
+
+        const username = inputuser.value.trim();
+        if(!username) return;
+
+        const requestUrl = `https://api.github.com/users/${username}`;
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', requestUrl);
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState === 4) {
+                if(xhr.status === 200) {
+
+                    //display card
+                    const data = JSON.parse(xhr.responseText);
+
+                    const card = document.createElement("div");
+                    card.classList.add("card");
+
+                    card.innerHTML = `
+                        <img src="${data.avatar_url}" alt="Avatar" />
+                        <h2>${data.name}</hr>
+                        <p>${data.followers}</p>
+                    `;
+                        
+                    cardcontainer.innerHTML = " ";
+                    cardcontainer.appendChild(card);
+
+                } else{
+                    cardcontainer.innerHTML = `<p> User Not Found </p>`;
+                }
+            }
+        }
+        xhr.send();
+    });
+
+
+    refbtn.addEventListener('click', () => {
+        cardcontainer.innerHTML = "";
+        inputuser.value = "";
+    });
+    
+        
+    
+</script>
+</html>
